@@ -18,7 +18,6 @@ context = {
 }
 
 class index(View):
-
     def get(self, request, slug=None):
         if not slug:
             context["user"] = Users.objects.get(user=request.user)
@@ -73,6 +72,48 @@ class pelajaran(View):
             komentar.save()  # Save the model instance to the database
 
         return redirect("user:pelajaran", slug=pelajaran.slug, urutan_bab=pelajaran.bab_kelas.urutan, urutan_pelajaran=pelajaran.urutan)
+
+def Koridor_ujian(request, slug):
+    kelas  = Kelas.objects.get(slug=slug)
+    bab = UserBab.objects.filter(user=request.user, kelas=kelas)
+    history = UserCourse.objects.get(kelas=kelas, user=request.user)
+    babmodel = Bab.objects.filter(kelas=kelas)
+    context['babprev'] = babmodel[babmodel.count()-1]
+    context['history'] = history
+    context['bab'] = bab
+    context['kelas']   = kelas
+    context['halaman'] = 'soal_kelas'
+    context['nilai'] = UserLatihan.objects.filter(user=request.user, is_last=True, kelas=kelas).order_by("-id")
+    return render(request, 'user/kelas/koridor_ujian.html', context)
+
+class ujian(View):
+    def get(self, request, slug):
+        kelas = Kelas.objects.get(slug=slug)
+        latihan = UserLatihan.objects.filter(user=request.user, kelas=kelas,  is_finish=False, is_last=True)
+        latih = UserQuestion.objects.filter(latihan=latihan.first())
+        if not latihan.exists():
+            question = Questions.objects.filter(kelas=kelas).order_by("?")
+            latih = UserLatihan.objects.create(user=request.user, kelas=kelas,  is_finish=False, is_last=True)
+            for i in range(30):
+                UserQuestion.objects.create(user=request.user, kelas=kelas,  questions=question[i], latihan=latih)
+            return redirect("user:ujian", slug=slug)
+        context['latih'] = latih
+        return render(request, 'user/kelas/ujian.html', context)
+    
+    def post(self, request, slug):
+        benar = 0
+        kelas = Kelas.objects.get(slug=slug)
+        latihan = UserLatihan.objects.filter(user=request.user, kelas=kelas, is_finish=False, is_last=True)
+        latih = UserQuestion.objects.filter(latihan=latihan.first())
+        for l in latih:
+            selected_value = request.POST.get(str(l.id))
+            if l.questions.answer == selected_value:
+                benar = benar + 1
+                l.right = True
+                l.save()
+        benar = round(benar/3)
+        latihan.update(is_finish=True, nilai=benar)
+        return redirect("user:ujian", slug=slug)
 
 def rangkuman(request, slug, urutan_bab):
     kelas = Kelas.objects.get(slug=slug)

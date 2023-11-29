@@ -62,7 +62,7 @@
                       <div class="d-flex justify-content-between">
                           <div class="d-flex">
                               <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-flag-checkered text-muted"></i></h6>
-                              <a href="#" class="btn fw-light ms-2 {% if halaman == 'soal_kelas' %}fw-bold{%endif%}">Ujian</a>
+                              <a href="{% url 'user:koridor-ujian' slug=kelas.slug %}" class="btn fw-light ms-2 {% if halaman == 'soal_kelas' %}fw-bold{%endif%}">Ujian</a>
                           </div>
                       </div>
                       <div class="d-flex justify-content-between">

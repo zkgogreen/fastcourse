@@ -1,8 +1,9 @@
-from app.app import auth
+from django.shortcuts import redirect, render
 
-# Create your views here.
+context = {
+    'url':'index',
+    'title':'index',
+    'icon':'static/assets/icon.png'
+}
 def index(request):
-    context = {
-        
-    }
-    return auth(request, 'index', context)
+    return render(request, 'user/index.html', context)

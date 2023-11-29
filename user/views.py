@@ -22,6 +22,8 @@ def checkuser(request):
     return redirect("user:index")
 
 def index(request):
+    if not request.user:
+        return redirect("user:login")
     course              = UserCourse.objects.filter(user=request.user, enroll=True)
     schadule            = UserSchadule.objects.filter(user=request.user)
     mentor              = UserMeeting.objects.filter(user=request.user).first()

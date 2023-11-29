@@ -1,0 +1,61 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+.images{
+    position: relative;
+}
+.images > img {
+    width: 80%;
+}
+.bottom-left {
+  position: absolute;
+  bottom: 10%;
+  left:15%;
+}
+.text {
+    white-space: nowrap; 
+  width: 100%; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="ms-1 row text-center bg-white" style="width: 100%;">
+        <a href="{% url 'user:kelas' %}" class="col-4 btn text-decoration-none fw-bold btn-light rounded-0 py-2">kelas</a>
+        <a href="{% url 'user:langganankelas' %}" class="col-4 btn text-decoration-none fw-bold btn-primary rounded-0 py-2">Langganan</a>
+        <a href="{% url 'user:carikelas' %}" class="col-4 btn text-decoration-none fw-bold btn-light rounded-0 py-2"><i class="fa-solid fa-magnifying-glass me-2"></i>Cari kelas</a>
+    </div>
+    <div class="mx-2 mt-3 py-2 bg-white">
+        {% if langganan %}
+        {% for k in kelas %}
+            <div class="col-6 col-md-3 mb-2">
+                <div class="rounded text-muted card" >
+                    <img src="http://{{ request.get_host }}/media/{{k.kelas.photo}}" class="rounded-5 m-3" alt="">
+                    <div class="text-start px-3 py-2" style="width: 100%;">
+                        <div class="fw-bold h5 mt-2 text-uppercase">{{k.kelas}}</div>
+                        <div class="fw-light h6">{{k.bab}} topik, {{k.pelajaran}} pelajaran</div>
+                        <div style="height: 10px; " class="progress mt-2" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: {{k.percent}}%;"></div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <a href="#" class="btn btn-primary mx-4 my-2 rounded-5">explore</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center display-3">
+            anda belum langganan kelas apapun
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

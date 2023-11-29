@@ -1,0 +1,72 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+.judul {
+    border-bottom: 2px #3C64D7 solid;
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 50px;
+}
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="container">
+
+        <div class="">
+            <!-- zoom meeting setting -->
+            <div class="judul d-flex justify-content-between">
+                <div class="h5 fw-bold text-primary">Zoom meeting</div>
+                <a href="#" class="fw-bold text-primary text-decoration-none">Dokumentasi</a>
+            </div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="apikey" class="form-label">API KEY </label>
+                    <input type="text" class="form-control" id="apikey" name="apikey" placeholder="api key" value="{{info.api_key}}">
+                </div>
+                <div class="mb-3">
+                    <label for="apisec" class="form-label">API secret</label>
+                    <input type="text" class="form-control" id="apisec" name="apisec" placeholder="api secret" value="{{info.secret_key}}">
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <div class="btn btn-light mx-2">Dokumentasi</div>
+                    <div class="btn btn-light mx-2">Test API</div>
+                    <button type="submit" class="btn btn-primary mx-2">Simpan perubahan</div>
+                </div>
+            <!-- end of zoom meeting setting -->
+
+            <!-- Description setting -->
+            <div class="judul d-flex justify-content-start">
+                <div class="h5 fw-bold text-primary">Description</div>
+            </div>
+                <div class="mb-3">
+                    <label for="mastered" class="form-label h5">I'm a master of :</label>
+                    <select class="form-select" id="mastered" name="mastered" aria-label="mastered">
+                        <option>Select</option>
+                        {% for m in master %}
+                        <option value="{{m.id}}" {% if info.mastered.name == m.name %} selected {% endif %}>{{m.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="aboutme" class="form-label h5">About me</label>
+                    <textarea class="form-control" name="about" id="aboutme" name="about" rows="3" >{{info.desc}}</textarea>
+                </div>
+                
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary mx-2">Simpan perubahan</div>
+                </div>
+            </form>
+            <!-- end of Description setting -->
+        </div>
+
+        
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

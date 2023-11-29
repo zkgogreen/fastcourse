@@ -1,0 +1,88 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock css %}
+{% block content %}
+<div class="content container">
+    <div class="row my-4">
+        <div class="col-md-6">
+            <div class="container shadow p-2 bg-white" style="min-height: 100px;">
+                <div class="d-flex justify-content-between">
+                    <h3 class="align-self-center ms-3 fw-semibold">PENDAPATAN <br> <span class="h4 fw-light">Rp.{{info.credits}}</span><span class="h6 text-danger mx-2"><i class="fas fa-arrow-down"></i></span></h3>
+                    <div class="d-flex">
+                        <div class="btn text-primary h4 align-self-center fw-bold"><i class="fa-solid fa-money-bill-transfer me-2"></i>Withdraw</div>
+                        <div class="btn text-primary h4 align-self-center fw-bold"><i class="fa-solid fa-clock-rotate-left me-2"></i>History</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="container shadow p-2 bg-white" style="min-height: 100px;">
+                <div class="row h5 text-muted align-self-center">
+                    <div class="col-md-3 pt-4 text-md-center text-start col-6 btn"><i class="far fa-user me-2 text-white p-2 bg-primary rounded-pill"></i>{{orang}} Orang</div>
+                    <div class="col-md-3 pt-4 text-md-center text-start col-6 btn"><i class="far fa-star me-2 text-white p-2 bg-primary rounded-pill"></i>4.5</div>
+                    <div class="col-md-3 pt-4 text-md-center text-start col-6 btn"><i class="fa-solid fa-chart-simple me-2 text-white p-2 bg-primary rounded-pill"></i>50%</div>
+                    <div class="col-md-3 pt-4 text-md-center text-start col-6 btn"><i class="far fa-comment me-2 text-white p-2 bg-primary rounded-pill"></i>10 Orang</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7 bg-white rounded-3 shadow m-2">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+    // Sample data
+    var data = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+      datasets: [{
+        label: 'Regular',
+        data: [120, 200, 150, 80, 230, 180],
+        backgroundColor: 'rgba(13,110,251, 0.5)',
+        borderColor: 'rgba(13,110,251, 1)',
+        borderWidth: 1
+      },{
+        label: 'Private',
+        data: [180, 120, 200, 150, 80, 230],
+        backgroundColor: 'rgba(11,202,240, 0.5)',
+        borderColor: 'rgba(11,202,240, 1)',
+        borderWidth: 1
+      }],
+    };
+
+    // Chart configuration
+    var config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        }
+      }
+    };
+
+    // Create the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, config);
+  </script>
+{% endblock script %}

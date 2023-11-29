@@ -1,0 +1,226 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="container rounded-4 p-4 shadow bg-white">
+        <div class="row bg-primary bg-gradient justify-content-around rounded-3">
+            
+            {% for j in jadwal %}
+            <div class="col-md-2 col-4 text-center rounded-3 my-2 text-white fw-semibold">
+                <p class="">
+                    <span class="h4 fw-light ">{{j.time|date:"G:i"}}</span> <br>
+                    {% if j.bab %}{{j.bab}}{%else%}Private{%endif%}
+                </p>
+                <button class="btn fw-bold text-bg-light btn-sm " type="button" data-bs-toggle="modal" data-bs-target="#zoom{{j.id}}">{% if j.active %}buka zoom{% else %}detail{% endif %}</button>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="d-flex mx-3 my-5">
+            <div class="display-6">Jadwal saya</div>
+        </div>
+        <div class="my-5">
+            <div class="rounded">
+                <div class="row justify-content-between">
+                    <div class="col-md-8">
+                        {% for hari, item in hari.items %}
+                        <div class="row justify-content-start justify-content-md-around">
+                            <div class="h5 col-sm-2 col-12">{{hari}}</div>
+                            {% for j in item %}
+                            <div class="col-sm-1 col-3"><div class="btn
+                                {% if j.status == 1 %}
+                                btn-primary
+                                {% elif j.status == 2 %}
+                                btn-warning
+                                {% elif j.status == 3 %}
+                                btn-info
+                                {% elif j.status == 4 %}
+                                btn-danger
+                                {% else %}
+                                btn-light
+                                {% endif %}
+                                rounded-0"  data-bs-toggle="modal" data-bs-target="#{{hari}}-{{j.jam}}" >
+                                    <span {% if j.jumlah != 0 %}data-bs-toggle="tooltip" data-bs-title="{{j.jumlah}}/{{j.info.kuota}} peserta menunggu"{% endif %}>{{j.jam}}</span></div></div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column">
+                            <div class="btn btn-primary rounded-0">Peserta menunggu</div>
+                            <div class="btn btn-warning rounded-0">Tidak ada peserta</div>
+                            <div class="btn btn-info rounded-0">Private</div>
+                            <div class="btn btn-danger rounded-0">Anda melewatkannya</div>
+                            <div class="btn btn-light rounded-0">Tidak ada kelas</div>
+                        </div>
+                        <hr>
+                        <div class="d-grid">
+                            <button class="btn btn-primary rounded-0" data-bs-toggle="modal" data-bs-target="#modal_private">Buat kelas private</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal private -->
+<div class="modal fade" id="modal_private" tabindex="-1" aria-labelledby="modal_privateLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal_privateLabel">Buat kelas private</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+        <div class="modal-body">
+                <input type="hidden" name="tipe" value="addprivate">
+                <div class="mb-3 row">
+                    <label for="tipe" class=" col-sm-2 fw-light mt-2 form-label">Jadwal</label>
+                    <div class="col-sm-10">
+                        <select class="form-select mb-3" id="tipe" aria-label=".form-select example" name="hari">
+                            <option selected>pilih jadwal</option>
+                            <option value=0> senin, selasa, rabu, kamis, jumat </option>
+                            <option value=1> senin, rabu,jumat </option>
+                            <option value=2> selasa, kamis, sabtu </option>
+                            <option value=3> jumat, sabtu, minggu </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="tipe" class=" col-sm-2 fw-light mt-2 form-label">Jadwal</label>
+                    <div class="col-sm-10">
+                        <select class="form-select mb-3" id="tipe" aria-label=".form-select example" name="jam">
+                            <option selected>jam</option>
+                            {% for j in jam %}
+                            <option value="{{ forloop.counter0 }}"> {{j}} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="Level" class=" col-sm-2 form-label">Level</label>
+                    <div class="col-sm-10">
+                        <select class="form-select mb-3" id="Level" name="level" aria-label=".form-select example">
+                            <option selected>Pilih level</option>
+                            {% for l in level %}
+                            <option value="{{l.id}}">{{l.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- end modal private -->
+
+<!-- Modal regular -->
+{% for hari, jam in hari.items %}
+{% for j in jam %}
+<div class="modal fade" id="{{hari}}-{{j.jam}}" tabindex="-1" aria-labelledby="{{hari}}-{{j.jam}}label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-uppercase" id="{{hari}}-{{j.jam}}label">{{hari}}, {{j.jam}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+            <input type="hidden" name="time" value="{{j.jam}}">
+            <input type="hidden" name="day" value="{{j.hari}}">
+            <input type="hidden" name="id" value="{{j.info.id}}">
+            <input type="hidden" name="tipe" value="{% if j.info == "" %}addregular{% else %}update{%endif%}">
+            <div class="mb-3 row">
+                <label for="kuota" class=" col-sm-2 form-label">Kuota</label>
+                <div class="col-sm-10">
+                    <select class="form-select" aria-label="kuota" name="kuota">
+                        <option selected>Pilih kuota</option>
+                        <option {% if j.info.kuota == 5%}selected{% endif%} value="5">5</option>
+                        <option {% if j.info.kuota == 10%}selected{% endif%} value="10">10</option>
+                        <option {% if j.info.kuota == 30%}selected{% endif%} value="30">30</option>
+                        <option {% if j.info.kuota == 50%}selected{% endif%} value="50">50</option>
+                        <option {% if j.info.kuota == 100%}selected{% endif%} value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="topik" class=" col-sm-2 form-label">Topik</label>
+                <div class="col-sm-10">
+                    <select class="form-select" aria-label="topik" name="topik">
+                        <option selected>Pilih topik</option>
+                        {% for topik in bab %}
+                        <option {% if topik.id == j.info.bab.id %}selected{%endif%} value="{{topik.id}}">{{topik.bab}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Level" class=" col-sm-2 form-label">Level</label>
+                <div class="col-sm-10">
+                    <select class="form-select mb-3" id="Level" name="level" aria-label=".form-select example">
+                        <option selected>Open this select menu</option>
+                        {% for l in level %}
+                        <option {% if j.info.level.id == l.id %}selected{% endif%} value="{{l.id}}">{{l.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {% if j.info != "" %}<a href="{% url 'teacher:kelas_hapus' j.info.id %}" class="btn btn-danger">hapus</a>{%endif%}
+            <button type="submit" class="btn btn-primary">{% if j.info == "" %}simpan{%else%}ubah{%endif%} </button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endfor %}
+
+<!-- modal zoom -->
+{% for z in jadwal %}
+<!-- Modal -->
+<div class="modal fade" id="zoom{{z.id}}" tabindex="-1" aria-labelledby="zoom{{z.id}}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="zoom{{z.id}}Label">
+            {% if z.bab %}{{z.bab}}{%else%}Private{%endif%}
+            {% if z.expired %}<div class="btn btn-danger btn-sm ms-3">EXPIRED</div>
+            {% else %} <div class="btn btn-primary btn-sm ms-3">{{z.remaining}} menit lagi</div>
+            {% endif %}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{z.id}}">
+            <input type="hidden" name="tipe" value="zoom">
+            <div class="modal-body">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">tutup</button>
+              <button type="submit" class="btn btn-primary rounded-0 {% if z.expired %}disabled{%endif%}">Buat zoom meeting</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock content %}
+{% block script %}
+<script src="{% static 'vendor/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+{% endblock script %}

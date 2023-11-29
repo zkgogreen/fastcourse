@@ -1,0 +1,159 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content container">
+    <div class="d-flex justify-content-between">
+        <div class="display-5 fw-bold my-4">{{kelas.kelas}}</div>
+        <div class=" align-self-center w-100 text-end">
+            <a href="{% url 'teacher:bab' id=kelas.id %}" class="btn col-3 btn-primary fw-bold rounded-0 btn-lg">Edit</a>
+        </div>
+    </div>
+    <div class="fw-semibold h4">Overview</div>
+    <div class="row justify-content-around">
+        <div class="col-6 col-md-3">
+            <a href="#" class="shadow text-decoration-none rounded-3 d-flex">
+                <div class="bg-primary rounded-3 m-2 bg-opacity-50" style="width: 60px; height: 60px;">
+                    <div class="text-center my-2 text-white h2"><i class="fa-solid fa-repeat"></i></div>
+                </div>
+                <h3 class="align-self-center text-primary h5 ms-3 mt-1" style="line-height: 20px;">{{kelas.subscribe}} Mendaftar <br>
+                    <span class="h6 text-muted">{{kelas.finish}} orang menyelesaikan</span><br>
+                    <div class="progress mt-1" role="progressbar" style="height: 10px;" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar bg-primary bg-opacity-50" style="width: 20%"></div>
+                    </div>
+                </h3>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="#" class="shadow text-decoration-none rounded-3 d-flex">
+                <div class="bg-primary rounded-3 m-2 bg-opacity-50" style="width: 60px; height: 60px;">
+                    <div class="text-center my-2 text-white"><i class="far fa-circle-question h2"></i></div>
+                </div>
+                <h3 class="align-self-center text-primary h5 ms-3 mt-1" style="line-height: 20px;">30 Pertanyaan <br>
+                    <span class="h6 text-muted">10 terjawab</span><br>
+                    <div class="progress mt-1" role="progressbar" style="height: 10px;" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar bg-primary bg-opacity-50" style="width: 3%"></div>
+                    </div>
+                </h3>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="#" class="shadow text-decoration-none rounded-3 d-flex">
+                <div class="bg-primary rounded-3 m-2 bg-opacity-50" style="width: 60px; height: 60px;">
+                    <div class="text-center my-2 text-white"><i class="fas fa-star h2"></i></div>
+                </div>
+                <h3 class="align-self-center text-primary h5 ms-3 mt-1" style="line-height: 20px;">30 Penilaian <br>
+                    <span class="h6 text-muted">score : {{kelas.ratting}}</span><br>
+                    <div class="progress mt-1" role="progressbar" style="height: 10px;" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar bg-primary bg-opacity-50" style="width: 20%"></div>
+                    </div>
+                </h3>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="#" class="shadow text-decoration-none rounded-3 d-flex">
+                <div class="bg-primary rounded-3 m-2 bg-opacity-50" style="width: 60px; height: 60px;">
+                    <div class="text-center my-2 text-white"><i class="fas fa-star h2"></i></div>
+                </div>
+                <h3 class="align-self-center text-primary h5 ms-3 mt-1" style="line-height: 20px;">30 Penilaian <br>
+                    <span class="h6 text-muted">score : 3.8</span><br>
+                    <div class="progress mt-1" role="progressbar" style="height: 10px;" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar bg-primary bg-opacity-50" style="width: 20%"></div>
+                    </div>
+                </h3>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <canvas class=" bg-white shadow p-3 rounded-3" id="myChart"></canvas>
+        </div>
+        <div class="col-md-4 bg-white shadow rounded-3" style="max-height: 480px;">
+            <h3 class="my-2">feedback</h3>
+            <div class="h-100 d-flex flex-column gap-2">
+                <div class="card">
+                    <div class="d-flex w-100" style="height: 50px;">
+                        <img src="https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg" style="object-fit: cover; width: 50px; height: 100%;" alt="">
+                        <div class="fw-bold d-flex justify-content-between w-100">
+                            <div class="d-flex flex-column w-100 ms-3 align-self-center ">
+                                <a href="#" class="text-decoration-none"> Muhammad Zakaria</a>
+                                <span class="fw-semibold" style="overflow: hidden; width: 100%; text-overflow: ellipsis; word-break:break-all; height: 20px;">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam molestiae nemo, harum nam cumque eaque numquam illum necessitatibus consequuntur cum magnam sapiente veritatis praesentium! Hic consectetur corporis sed saepe exercitationem?</span>
+                            </div>
+                            <div class="align-self-center d-flex me-3">
+                                <i class="far fa-star text-warning h5 align-self-center"></i><span class="h4">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="d-flex w-100" style="height: 50px;">
+                        <img src="https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg" style="object-fit: cover; width: 50px; height: 100%;" alt="">
+                        <div class="fw-bold d-flex justify-content-between w-100">
+                            <div class="d-flex flex-column w-100 ms-3 align-self-center ">
+                                <a href="#" class="text-decoration-none"> Muhammad Zakaria</a>
+                                <span class="fw-semibold" style="overflow: hidden; width: 100%; text-overflow: ellipsis; word-break:break-all; height: 20px;">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam molestiae nemo, harum nam cumque eaque numquam illum necessitatibus consequuntur cum magnam sapiente veritatis praesentium! Hic consectetur corporis sed saepe exercitationem?</span>
+                            </div>
+                            <div class="align-self-center d-flex me-3">
+                                <i class="far fa-star text-warning h5 align-self-center"></i><span class="h4">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+        // Sample data
+        var data = {
+      labels: [{% for l in kelas.babmodel %}'{{l.bab}}',{% endfor %}],
+      datasets: [{
+        label: 'Benar',
+        data: [{% for l in kelas.babmodel %}{{l.benar}},{% endfor %}],
+        backgroundColor: 'rgba(13,110,251, 0.5)',
+        borderColor: 'rgba(13,110,251, 1)',
+        borderWidth: 1
+      },{
+        label: 'salah',
+        data: [{% for l in kelas.babmodel %}{{l.salah}},{% endfor %}],
+        backgroundColor: 'rgba(11,202,240, 0.5)',
+        borderColor: 'rgba(11,202,240, 1)',
+        borderWidth: 1
+      }],
+    };
+
+    // Chart configuration
+    var config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        }
+      }
+    };
+
+    // Create the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, config);
+</script>
+{% endblock script %}

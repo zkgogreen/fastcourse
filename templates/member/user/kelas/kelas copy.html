@@ -1,0 +1,186 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/kelas.css' %}">
+<style>
+    .parallax {
+  /* The image used */
+
+  /* Set a specific height */
+  min-height: 500px;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+{% endblock css %}
+{% block content %}
+<div id="course">
+    <div id="coursemenu">
+        <div id="coursehead">
+            <div class="d-flex justify-content-between my-2">
+                <div class="h2">Course</div>
+                <i class="fa-solid fa-magnifying-glass align-self-center"></i>
+            </div>
+            <div class="d-flex my-3">
+                <div class="mx-2 btn btn-sm fw-bold shadow-sm bg-white">aktif</div>
+                <div class="mx-2 btn btn-sm text-muted">selesai</div>
+                <div class="mx-2 btn btn-sm text-muted">semua</div>
+            </div>
+            <div class="d-flex my-2">
+                <div class="col-11 d-flex">
+                    <div class="mx-1 btn bg-white shadow-sm btn-sm fw-bold text-dark"><img src="{% static 'flag/en.svg' %}"
+                            alt="english" style="width: 15px;"> english</div>
+                    <div class="mx-1 btn btn-sm text-muted"><img src="{% static 'flag/jp.svg' %}" alt="english"
+                            style="width: 15px;"> Japan</div>
+                    <div class="mx-1 btn btn-sm text-muted"><img src="{% static 'flag/sa.svg' %}" alt="english"
+                            style="width: 15px;"> Arab</div>
+                    <div class="mx-1 btn btn-sm text-muted"><img src="{% static 'flag/cn.svg' %}" alt="english"
+                            style="width: 15px;"> China</div>
+                </div>
+                <div class="col-1">
+                    <div class="btn btn-sm text-muted bg-white shadow-sm"><i class="fa-solid fa-sliders"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4" id="coursebody">
+            {% for kls in kelas %}
+            <a onclick="kelas('{{kls.id}}')" style="cursor: pointer;" class="d-flex text-decoration-none text-muted bg-white rounded kelas shadow-sm my-2">
+                <img src="/media/{{kls.photo}}"
+                    alt="profile"
+                    style="height: 100px; width: 200px; object-fit: cover; border-top-left-radius: 5px; border-bottom-left-radius: 5px;" />
+                <div class="d-flex flex-column align-self-center mx-4" style="width:100%">
+                    <div class="h3 d-flex" style="margin-top: -10px;">
+                        <span class="text-primary">{{kls.kelas}}</span>
+                    </div>
+                    <p class="text-muted me-4" style="font-size: 12px;">
+                        <i class="fas fa-eye ms-1 me-1"></i>{{kls.see}}
+                        <i class="fas fa-user ms-2 me-1"></i>{{kls.enroll}}
+                        <i class="fas fa-check ms-2 me-1"></i>{{kls.done}}
+                        <i class="fas fa-message ms-2 me-1"></i>{{kls.feed}}
+                    </p>
+                    <p class="h6 text-muted me-4">
+                    <i class="fas fa-star text-warning me-1"></i>{% if kls.ratting == 0 %}0.0{%else%}{{ kls.ratting}}{% endif %}
+                    <i class="fas fa-book me-1 ms-2 text-primary"></i>{{kls.count}}
+                    <span class="ms-2">{{kls.kategori.name}}</span></p>
+                </div>
+                <div class="btn btn-outline-primary align-self-center rounded-0 kelasbtn">Daftar</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="detail" class="bg-light rounded ms-md-5 ms-0">
+        <div id="detailhead" class="pb-3">
+            <div class="parallax" style="background-image: url('/media/{{kelas.0.photo}}');"></div>
+            <div class="mx-2">
+                <div class="d-flex mt-4 ms-2 text-muted">
+                    <p class="text-muted me-4">
+                        <i class="fas fa-eye ms-1 me-1"></i><span id="views">{{kelas.0.see}}</span>
+                        <i class="fas fa-user ms-2 me-1"></i><span id="enroll">{{kelas.0.enroll}}</span>
+                        <i class="fas fa-check ms-2 me-1"></i><span id="done">{{kelas.0.done}}</span>
+                        <i class="fas fa-message ms-2 me-1"></i><span id="feed">{{kelas.0.done}}</span>
+                        <i class="fas fa-star ms-1 me-1"></i><span id="ratting">{{kelas.0.ratting}}</span>
+                    </p>
+                    <div class="ms-5">
+                        <div class="text-primary h5" id="kategori">{{kelas.0.kategori.name}}</div>
+                    </div>
+                </div>
+                <div class="display-4 mx-3" id="judul">{{kelas.0.kelas}}</div>
+                <div class="text-muted my-2 mx-3" id="keterangan">{{kelas.0.keterangan}}</div>
+                <div class="d-flex my-3">
+                    <div class="rounded-img m-2 me-3">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg4-W6m3M4gAM2aLu9UfQf1q571pWPPUPgYE5kjAg&s" alt="profile">
+                    </div>
+                    <div class="d-flex flex-column">
+                        <h3>Muhammad Zakaria</h3>
+                        <p class="text-muted" style="margin-top: -10px;">Master engineer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mx-3">
+                <h3>Konten</h3>
+                <div class="text-muted align-self-center">{{kelas.0.count}} module</div>
+            </div>
+            <div id="lesson" class="mx-2">
+                {% for j in kelas.0.pelajaran %}
+                <a href='#' class="text-decoration-none">
+                    <div class="d-flex text-muted bg-white rounded shadow my-3">
+                        <div class="{% if j.vidio|length <= 3 %}bg-info{% else %}bg-warning{%endif%} position-relative kindstyle" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px; width: 50px;">
+                            <h4 class="text-dark position-absolute top-50 start-50 translate-middle kind">{% if j.vidio|length <= 3 %}T{% else %}<i class="fa-solid fa-play"></i>{%endif%}</h4>
+                        </div>
+                        <div class="d-flex flex-column ms-2 py-2 lh-1" style="width:100%">
+                            <span class="text-dark h6 judul">{{ j.judul }}</span>
+                            <span class="text-muted keterangan" style="font-size: 10px; margin-top: -8px;">{{j.keterangan}}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="detailfooter" class="bg-light justify-content-around pt-2">
+            <h3 id="back"><i class="fa-solid fa-chevron-left"></i></h3>
+            <h4>Daftar</h4>
+            <h3><i class="fa-solid fa-ellipsis-vertical"></i></h3>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+    let course = document.getElementById("course")
+    let sidebar = document.getElementById("sidebar")
+
+    function kelas(id){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            var response = JSON.parse(this.response);
+            document.getElementsByClassName("parallax")[0].style.backgroundImage = "url(http://192.168.1.6:8000/media/"+response['photo']+")";
+            document.getElementById("ratting").innerHTML = response['ratting'];
+            document.getElementById("judul").innerHTML = response['judul'];
+            document.getElementById("kategori").innerHTML = response['kategori'];
+            document.getElementById("keterangan").innerHTML = response['keterangan'];
+            document.getElementById("views").innerHTML = response['views'];
+            document.getElementById("enroll").innerHTML = response['enroll'];
+            document.getElementById("done").innerHTML = response['done'];
+            document.getElementById("feed").innerHTML = response['feed'];
+            var kelas = document.getElementById("lesson");
+            var kelaslist = kelas.children[0].innerHTML;
+            kelas.innerHTML = ""
+            for(var i=0;i<response['kelas'].length;i++){
+                var z = document.createElement('a');
+                z.classList.add("text-decoration-none")
+                z.href = "/"+id;
+                z.innerHTML = kelaslist;
+                kelas.appendChild(z);
+                document.getElementsByClassName("keterangan")[i].innerHTML = response['kelas'][i]['keterangan']
+                document.getElementsByClassName("judul")[i].innerHTML = response['kelas'][i]['judul']
+                if(response['kelas'][i]['vidio'] == null){
+                    document.getElementsByClassName("kind")[i].innerHTML = "T"
+                    document.getElementsByClassName("kindstyle")[i].classList.add("bg-info")
+                    document.getElementsByClassName("kindstyle")[i].classList.remove("bg-warning")
+                }else{
+                    document.getElementsByClassName("kind")[i].innerHTML = '<i class="fa-solid fa-play"></i>'
+                    document.getElementsByClassName("kindstyle")[i].classList.add("bg-warning")
+                    document.getElementsByClassName("kindstyle")[i].classList.remove("bg-info")
+                }
+            }
+            }
+        xhttp.open("GET", "http://192.168.1.6:8000/user/kelas/json/"+id, true);
+        xhttp.send();
+        course.classList.add("active")
+        sidebar.classList.add("d-none")
+        sidebar.classList.add("d-md-block")
+    }
+    document.getElementById("back").addEventListener('click',function(){
+        course.classList.remove("active")
+        sidebar.classList.remove("d-none")
+        sidebar.classList.remove("d-md-block")
+    })
+</script>
+{% endblock script %}

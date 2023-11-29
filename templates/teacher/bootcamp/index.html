@@ -1,0 +1,200 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" integrity="sha512-liDnOrsa/NzR+4VyWQ3fBzsDBzal338A1VfUpQvAcdt+eL88ePCOd3n9VQpdA0Yxi4yglmLy/AmH+Lrzmn0eMQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+{% endblock head %}
+{% block css %}
+<style>
+  .btn-rsch > a {
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .btn-rsch:hover > a {
+    opacity: 1;
+  }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+  <div class="d-flex justify-content-between mx-2">
+      <div class="h4 align-self-center">Jadwal Bootcamp</div>
+      <button class="btn btn-primary rounded-0" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJadwal">Buat Jadwal</button>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="d-flex flex-column gap-2 col-12 col-md-6 mb-4">
+      {% for j in jadwal %}
+      <div class="card shadow">
+          <div class="text-dark rounded-0 d-flex flex-md-row flex-column justify-content-between p-2 mx-3">
+            <div class="d-flex flex-column">
+              <p class="h3">{{j.level.name}}</p>
+              <div class="text-muted">{{j.mulai|date:"d M Y"}} - {{j.end|date:"d M Y"}}</div>
+              <div class="d-flex fw-semibold text-secondary">
+                <i class="far fa-clock me-1 align-self-center"></i><span class="">{{j.get_time_display}}</span>
+                <i class="far fa-user me-1 ms-3 align-self-center"></i><span class="">{{j.kuota}}</span>
+              </div>
+            </div>
+              <div class="mt-md-0 mt-3 d-flex align-self-center">
+                {% if j.now == True %}
+                <a href="{{teacher.link}}" target="_blank" class="btn btn-primary rounded-0 me-2 ms-4" style="width: 120px;">Buka Kelas</a>
+                {% else %}
+                <a class="btn disabled btn-primary rounded-0 me-2 ms-4" style="width: 120px;">{{j.now.tanggal|date:"d/m/Y"}}</a>
+                {% endif %}
+                  <a class="btn btn-outline-primary rounded-0" style="width: 120px;" data-bs-toggle="collapse" href="#collapseExample-{{j.id}}" role="button" aria-expanded="false" aria-controls="collapseExample-{{j.id}}">EXPAND</a>
+              </div>
+          </div>
+          <div class="collapse p-3" id="collapseExample-{{j.id}}">
+              <table class="table" id="table">
+                  <thead>
+                    <tr >
+                      <th scope="col">Tanggal</th>
+                      <th >jam</th>
+                      <th >Peserta</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for s in j.schadule %}
+                    <tr {% if s.now %} class="bg-light" {% endif %} >
+                      <th scope="row">{{s.tanggal|date:"d M Y"}}</th>
+                      <td>{{s.get_time_display}} WIB</td>
+                      <td>{{s.peserta}}</td>
+                      {% if s.now %}
+                      <td><a href="{{teacher.link}}" target="_blank" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm">Buka</a></td>
+                      {% else %}
+                      <td ><a href="#"  class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Reschadule</a></td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="p-3 bg-white card shadow col-12 col-md-6">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- modal add jadwal  -->
+<div class="modal fade" id="addJadwal" tabindex="-1" aria-labelledby="addJadwalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addJadwalLabel">Buat Jadwal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="post">
+          {% csrf_token %}
+          <div class="modal-body">
+              {{form.as_p}}
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- end add jadwal  -->
+
+<!-- modal reschadule -->
+<!-- Modal -->
+<div class="modal fade" id="shcadule" tabindex="-1" aria-labelledby="shcaduleLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="shcaduleLabel">Reschadule</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'teacher:reschadule' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="id">
+      <div class="modal-body">
+          <div class="d-flex justify-content-center h4">
+            <span id="tanggal" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <input type="date" name="tanggal" id="tanggalvalue" style="width: 300px;" class="form-control rounded-0">
+          </div>
+          <div class="d-flex justify-content-center h4">
+            <span id="jam" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <select class="form-select form-select-sm rounded-0" name="time" style="width: 300px;">
+              <option selected>Pilih Jam</option>
+              <option value="0">07:30</option>
+              <option value="1">09:00</option>
+              <option value="2">10:30</option>
+              <option value="3">13:00</option>
+              <option value="4">14:30</option>
+              <option value="5">16:00</option>
+              <option value="6">18:30</option>
+              <option value="7">20:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-secondary rounded-0">Reschadule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- end modal reschadule  -->
+{% endblock content %}
+{% block script %}
+<script>
+    $('.table').DataTable({
+        "dom": 'rtp',
+        "ordering": false,
+    });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: [
+              {% for event in events %}
+              {
+                  id          :'{{event.id}}',
+                  title       :'{{ event.level }}',
+                  start       :'{{ event.tanggal|date:"Y-m-d"}}T{{ event.get_time_display }}',
+                  description :'{{ event.peserta }} orang',
+                  tanggal     :'{{ event.tanggal|date:"d/m/Y"}}',
+                  jam         :'{{ event.get_time_display }}'
+              },
+              {% endfor %}
+          ],
+          eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false // Ensure 24-hour format
+            },
+          eventClick: function(info) {
+            document.getElementById('shcaduleLabel').innerHTML = info.event.title;
+            document.getElementById('id').value = info.event.id;
+            document.getElementById('tanggal').innerHTML = info.event.extendedProps.tanggal;
+            document.getElementById('tanggalvalue').value = info.event.extendedProps.tanggal;
+            document.getElementById('jam').innerHTML = info.event.extendedProps.jam;
+            $('#shcadule').modal('show');
+            // myModal.addEventListener('shown.bs.modal', () => {
+            //   myInput.focus()
+            // })
+              // alert('Event: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.description+" "+info.event.extendedProps.test);
+          }
+      });
+      
+      calendar.render();
+  });
+</script>
+{% endblock script %}

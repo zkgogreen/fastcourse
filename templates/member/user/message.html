@@ -1,0 +1,109 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+{% endblock head %}
+{% block css %}{% endblock css %}
+{% block content %}
+    <div id="message" class="shadow">
+        <div id="messageperson">
+            <div id="headerperson" class="bg-light shadow">
+                <div class="d-flex justify-content-between px-3 pt-2 text-muted align-items-center">
+                    <div class="dropdown col-10">
+                        <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Semua pesan
+                        </button>
+                        <ul class="dropdown-menu rounded-0">
+                            <li><a class="dropdown-item" href="#">Semua pesan</a></li>
+                            <li><a class="dropdown-item" href="#">Mentor</a></li>
+                            <li><a class="dropdown-item" href="#">Teman</a></li>
+                            <li><a class="dropdown-item" href="#">Sudah dibaca</a></li>
+                            <li><a class="dropdown-item" href="#">Belum dibaca</a></li>
+                        </ul>
+                    </div>
+                    <div class="d-none col-10">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="d-flex">
+                                <i class="fas fa-arrow-left align-self-center me-3" id="stopsearch"></i>
+                                <input type="text" class="form-control rounded-5">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="btn" id="search"><i class="fa-solid fa-magnifying-glass col-1"></i></div>
+                </div>
+            </div>
+            <div id="bodyperson"  class="bg-white">
+                <div class="loop"><div class="loop">
+                    <div class="d-flex">
+                        <div class="col-2 ms-2">
+                            <div class="rounded-img">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg4-W6m3M4gAM2aLu9UfQf1q571pWPPUPgYE5kjAg&s" alt="profile">
+                            </div>
+                        </div>
+                        <div class="col-8 d-flex flex-column align-self-center">
+                            <h5 style="margin-bottom: -4px;">Zakaria</h5>
+                            <div class="text-muted">apa kabar ?</div>
+                        </div>
+                        <div class="col 2 align-self-center">
+                            <div class="btn btn-outline-light text-muted shadow-sm btn-sm ">+2</div>
+                        </div>
+                    </div>
+                    <hr style="margin-right: 10px;margin-left: 10px;">
+                </div></div>
+            </div>
+        </div>
+        <div id="messagetext">
+            <div id="headertext" class="bg-light px-3 shadow-sm">
+                <div id="messageback">
+                    <div class="d-flex justify-content-around justify-content-md-between pt-1 text-muted align-items-center">
+                        <div class="d-block d-md-none">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
+                        <p class=" pt-1"><i class="fas fa-circle text-success me-2"></i>Muhammad zakaria</p>
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </div>
+                </div>
+            </div>
+            <div id="bodytext" class="bg-white">
+                <div class="loop"><div class="loop">
+                    <div class="d-flex flex-column messagetext">
+                        <div class="d-flex justify-content-start ms-3">
+                            <div class="btn btn-sm btn-primary">Test sender</div>
+                        </div>
+                        <div class="d-flex justify-content-end me-3">
+                            <div class="btn btn-sm btn-secondary">Test receiver</div>
+                        </div>
+                    </div>
+                </div></div>
+            </div>
+            <div id="footertext">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex mt-2 mx-2">
+                        <div class="col-11 align-self-center">
+                            <input type="text" class="form-control rounded-5">
+                        </div>
+                        <div class="col-1 align-self-center text-center">
+                            <button type="submit" class="btn btn-sm"><i class="fa-regular fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+<script>
+var search = document.getElementById("search")
+var stopsearch = document.getElementById("stopsearch")
+search.addEventListener("click", function(){
+    this.parentElement.children[0].classList.add("d-none")
+    this.parentElement.children[1].classList.remove("d-none")
+})
+stopsearch.addEventListener("click", function(){
+    search.parentElement.children[0].classList.remove("d-none")
+    search.parentElement.children[1].classList.add("d-none")
+})
+</script>
+{% endblock script %}

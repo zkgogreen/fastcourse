@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="{% static 'svg/logo-only.svg' %}" type="image/icon type">
+    <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+    <style>
+      ::-webkit-input-placeholder { /* WebKit browsers */
+        color:    #F3F3FF;
+    }
+    </style>
+    <title>{% block head_title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div>
+      <div class="content-form shadow">
+        {% block content %}
+    
+        {% endblock %}
+      </div>
+  </div>
+    {% block extra_body %}
+    {% endblock %}
+    <script>
+      function checkTerm() {
+      var checkbox = document.getElementById("checkbox");
+      var sign = document.getElementById("sign-up");
+
+      // If the checkbox is checked, display the output text
+      if (checkbox.checked == true){
+          sign.disabled = false;
+          } else {
+              sign.disabled = true;
+          }
+      }
+  </script>
+  <script src="{% static 'js/login.js' %}"></script>
+  </body>
+</html>

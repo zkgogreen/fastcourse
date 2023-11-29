@@ -1,0 +1,70 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+    ::-webkit-scrollbar {
+  display: none;
+}
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="text-center my-4 display-5 fw-semibold text-primary">Regular</div>
+    <div class="row justify-content-center my-5">
+        {% for p in regular %}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header text-center h4 fw-bold text-uppercase {% if p.bestseller %}bg-primary text-white{%endif%}">{{p.name}}</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+<li class="list-group-item text-uppercase">{% if p.ads %}<i class="fas fa-times text-danger me-2"></i>iklan {%else%} <i class="fas fa-check text-success me-2"></i>bebas iklan {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if not p.vidio %}<i class="fas fa-times text-danger me-2"></i>tanpa vidio {%else%} <i class="fas fa-check text-success me-2"></i>bantuan vidio {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if p.meeting == 0 %}<i class="fas fa-times text-danger me-2"></i>tanpa mentor {%else%} <i class="fas fa-check text-success me-2"></i>mentor {{ p.meeting }}x pertemuan {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if p.duration == 0 %}<i class="fas fa-check text-success me-2"></i>akses selamanya {%else%} <i class="fas fa-check text-success me-2"></i>durasi {{p.duration}} bulan {%endif%}</li>
+                    </ul>
+                    <div class="my-4 text-primary h3 text-center fw-bold">
+                        {% if p.biaya == 0%}FREE{% else %}Rp. {{p.biaya}}{%endif%}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid">
+                        {% if p.biaya == 0%} <div class="text-center fw-bold text-primary">FREE</div>{% else %}<a class="btn btn-primary rounded-0 shadow fw-bold" href="{% url 'user:confirm_bootcamp' id=p.id %}">Lagganan</a>{%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+    </div>
+    <hr class="my-5">
+    <div class="text-center my-4 display-5 fw-semibold text-primary">Private</div>
+    <div class="row justify-content-center my-5">
+        {% for p in private %}
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header text-center h4 fw-bold text-uppercase {% if p.bestseller %}bg-primary text-white{%endif%}">{{p.name}}</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+<li class="list-group-item text-uppercase">{% if p.ads %}<i class="fas fa-times text-danger me-2"></i>iklan {%else%} <i class="fas fa-check text-success me-2"></i>bebas iklan {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if not p.vidio %}<i class="fas fa-times text-danger me-2"></i>tanpa vidio {%else%} <i class="fas fa-check text-success me-2"></i>bantuan vidio {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if p.meeting == 0 %}<i class="fas fa-times text-danger me-2"></i>tanpa mentor {%else%} <i class="fas fa-check text-success me-2"></i>mentor {{ p.meeting }}x pertemuan {%endif%}</li>
+<li class="list-group-item text-uppercase">{% if p.duration == 0 %}<i class="fas fa-check text-success me-2"></i>akses selamanya {%else%} <i class="fas fa-check text-success me-2"></i>durasi {{p.duration}} bulan {%endif%}</li>
+                    </ul>
+                    <div class="my-4 text-primary h3 text-center fw-bold">
+                        {% if p.biaya == 0%}FREE{% else %}Rp. {{p.biaya}}{%endif%}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid">
+                        <a class="btn btn-primary rounded-0 shadow fw-bold" href="{% url 'user:confirm_bootcamp' id=p.id %}">Lagganan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

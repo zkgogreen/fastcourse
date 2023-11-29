@@ -1,0 +1,76 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="icon" type="image/x-icon" href="http://{{request.get_host}}/static/assets/icon.png" sizes="192x192">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src="{% static 'vendor/js/bootstrap.bundle.min.js' %}"></script>
+    {% block head %}{% endblock head %}
+    {% block css %}
+        
+    {% endblock css %}
+    <style>
+      .fc .fc-col-header-cell-cushion {
+        display: inline-block;
+        padding: 2px 4px;
+        text-decoration: none;
+      }
+      .fc .fc-col-header-cell-cushion { /* needs to be same precedence */
+        padding-top: 5px; /* an override! */
+        padding-bottom: 5px; /* an override! */
+        color: blue;
+      }
+      .fc-daygrid-day-number {
+        text-decoration: none;
+        font-weight: 900;
+        color: lightblue;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="sidebar h6" id="sidebar">
+        <div class="d-none d-md-block"><img src="/static/assets/icon.png" alt="logo" style="height: 60px; filter: brightness(0) invert(1);"></div>
+        <a {% if url == 'index' %}class="active"{% endif %} href="{% url 'user:index' %}"><i class="fas fa-home me-3"></i> <span class="d-none d-sm-block">Home</span></a>
+        <a {% if url == 'kelas' %}class="active"{% endif %} href="{% url 'user:kelas' %}"><i class="fa-solid fa-person-chalkboard me-3"></i><span class="d-none d-sm-block">Kelas</span></a>
+        <a {% if url == 'bootcamp' %}class="active"{% endif %} href="{% url 'user:bootcamp' %}"><i class="fa-regular fa-calendar-check me-3"></i><span class="d-none d-sm-block">Bootcamp</span></a>
+        <a href="#about"><i class="fa-solid fa-check me-3"></i><span class="d-none d-sm-block">About</span></a>
+        
+    </div>
+    <div class="topbar bg-white text-primary shadow-sm" id="topbar">
+        <div class="d-flex justify-content-between justify-content-md-start flex-md-row-reverse">
+            <div class="d-flex flex-md-row-reverse">
+              <div class="dropdown mx-2">
+                <a class="btn btn-sm btn-outline-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="rounded-img">
+                  <img src="/media/{{ user.photo }}" alt="profile">
+                </div>
+                </a>
+                <ul class="dropdown-menu py-3">
+                  {% if user.teacher %} <li><a class="dropdown-item h5 fw-light" href="{% url 'user:changeteacher' %}">Beralih ke mentor</a></li>{% endif %}
+                  {% if user.teacher %} <li><a class="dropdown-item h5 fw-light" href="{% url 'teacher:setting' %}">Teacher Setting</a></li>{% endif %}
+                  <li><a class="dropdown-item h5 fw-light" href="#">Profile</a></li>
+                  <li><a class="dropdown-item h5 fw-light" href="{% url 'user:upgrade' %}">Upgrade</a></li>
+                  <li><a class="dropdown-item h5 fw-light" href="{% url 'account_logout' %}">Logout</a></li>
+                </ul>
+              </div>
+                <p class="p-4 h5 ">{{user.user.first_name}} {{user.user.last_name}} </p>
+            </div>
+            <div class="d-flex h4 text-primary me-4">
+              <a href="{% url 'user:message' %}" class=" align-self-center me-4"> <i class="fa-regular fa-message"></i></a>
+                <i class="fa-regular fa-bell align-self-center"></i>
+            </div>
+        </div>
+    </div>
+    
+    {% block content %}
+    {% endblock content %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    {% block script %}
+    {% endblock script %}
+  </body>
+</html>

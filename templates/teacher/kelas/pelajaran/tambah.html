@@ -1,0 +1,21 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content container bg-white shadow rounded-3 p-3">
+    <a href="{% url 'teacher:bab_edit' id=bab_kelas.id %}" class="text-decoration-none h3 my-3"><i class="fa-solid fa-chevron-left me-2"></i> kembali</a>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        {{form.media}}
+        <div class="float-end">
+            <input type="submit" value="SIMPAN" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

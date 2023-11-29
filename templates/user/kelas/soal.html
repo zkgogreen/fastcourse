@@ -1,0 +1,89 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="icon" type="image/x-icon" href="http://{{request.get_host}}/{{icon}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.css' %}">
+  </head>
+  <body>
+   <div class="w-100 fixed-top bg-white d-flex justify-content-between shadow" style="height: 80px;">
+    <a href="#" class="h3 align-self-center col-3 text-center" style="cursor: pointer;"><i class="fas fa-times"></i></a>
+    <div class="align-self-center col-3 h3 fw-bold" id="countdownElement"></div>
+   </div>
+   <div class="bg-info" id="percent" style="height: 2px; width: 100%; transform: width .2s;"></div>
+   <div class="container" style="margin-bottom: 100px; margin-top: 120px;">
+        <form action="" method="post" name="formsubmit" id="formsubmit">
+            {% csrf_token %}
+            {% for s in latih %}
+            <div class="fw-bold h3">{{ forloop.counter }}. {{s.questions.soal}}</div>
+            <div class="d-grid gap-1">
+            {% for q in s.questions.questionList %}
+                <input type="radio" {% if s.selected == q  %}checked{% endif %} class="btn-check" name="{{s.id}}" value="{{q}}" id="btn-check-{{s.id}}{{ forloop.counter }}" autocomplete="off" onclick="selectvalue(this.name, this.value)">
+                <label class="btn btn-outline-secondary rounded-0 fw-semibold h5 text-start" for="btn-check-{{s.id}}{{ forloop.counter }}">{{q}}</label>
+            {% endfor %}
+            </div>
+            <br>
+            {% endfor%}
+
+            <div style="position: fixed; bottom: 0; left: 0; height: 80px; width: 100%; padding: 0 30px 0 30px;">
+                <input type="submit" name="btn-submit" value="Selesaikan" id="btn-submit" class="btn btn-secondary btn-lg fw-bold w-100 rounded-0">
+             </div>
+        </form>
+    </div>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script> -->
+<script>
+    const countdownElement = document.getElementById("countdownElement");
+    let percent = document.getElementById("percent");
+
+    function updateCountdown(minutes, seconds) {
+        percent.style.width = (((seconds+(minutes*60)) / 600) * 100)+"%";
+
+        var totalTime = parseInt(minutes) * 60 + parseInt(seconds);
+
+        var timer = setInterval(function () {
+            var minutesLeft = Math.floor(totalTime / 60);
+            var secondsLeft = totalTime % 60;
+
+            countdownElement.innerHTML = addzero(minutesLeft)+":"+addzero(secondsLeft);
+            loadTime(minutesLeft, secondsLeft)
+            if (totalTime <= 0) {
+                document.formsubmit.submit();
+            } else {
+            totalTime--;
+            }
+        }, 1000);
+    }
+
+    function addzero(time){
+        return (time < 9)?"0"+time:time;
+    }
+    // Start the 10-minute countdown when the page loads (you can trigger it in response to an event as well)
+
+    function loadTime(minutes, seconds) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {}
+        xhttp.open("GET", "{% url 'user:waktu' %}?id={{latih.0.latihan.id}}&minutes="+minutes+"&seconds="+seconds, true);
+        xhttp.send();
+    }
+
+    updateCountdown('{{latih.0.latihan.countdownNow|time:"i"}}', '{{latih.0.latihan.countdownNow|time:"s"}}');
+
+    function selectvalue(id, value){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {}
+        xhttp.open("GET", "{% url 'user:select' %}?id="+id+"&selected="+value, true);
+        xhttp.send();
+    }
+</script>
+    <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
+</body>
+
+<script>
+    const aneh = document.getElementById("shimeji-workArea")
+    aneh.style.display = "none"
+</script>
+</html>

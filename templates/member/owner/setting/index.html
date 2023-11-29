@@ -1,0 +1,58 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="container">
+        <div class="h3">Landing page</div>
+        <form action="" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="act" value="landing">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul</label>
+                    <input type="text" name="title" id="title" value="{{setting.title}}" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="subtitle" class="form-label">Sub judul</label>
+                    <input type="text" name="subtitle" id="subtitle" value="{{setting.sub}}"  class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    {% with image='/landing/no_image.png' %}
+                    <div class="col-3">
+                        <label for="icon" class="btn"><img src="/media/{% if setting.icon %}{{setting.icon}}{% else %}{{image}}{% endif %}" class="img-thumbnail" alt="{{setting.icon}}"></label>
+                        <input type="file" name="icon" id="icon" class="d-none">
+                        <p class="text-center fw-semibold">icon : {{setting.icon}}</p>
+                    </div>
+                    <div class="col-3">
+                        <label for="logo" class="btn"><img src="/media/{% if setting.logo %}{{setting.logo}}{% else %}{{image}}{% endif %}" class="img-thumbnail" alt="{{setting.logo}}"></label>
+                        <input type="file" name="logo" id="logo" class="d-none">
+                        <p class="text-center  fw-semibold">logo : {{setting.logo}}</p>
+                    </div>
+                    <div class="col-3">
+                        <label for="foto" class="btn"><img src="/media/{% if setting.foto %}{{setting.foto}}{% else %}{{image}}{% endif %}" class="img-thumbnail" alt="{{setting.foto}}"></label>
+                        <input type="file" name="foto" id="foto" class="d-none">
+                        <p class="text-center  fw-semibold">foto : {{setting.foto}}</p>
+                    </div>
+                    <div class="col-3">
+                        <label for="fotoadv" class="btn"><img src="/media/{% if setting.fotoadv %}{{setting.fotoadv}}{% else %}{{image}}{% endif %}" class="img-thumbnail" alt="{{setting.fotoadv}}"></label>
+                        <input type="file" name="fotoadv" id="fotoadv" class="d-none">
+                        <p class="text-center  fw-semibold">foto advance : {{setting.fotoadv}}</p>
+                    </div>
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">simpan</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+
+{% endblock script %}

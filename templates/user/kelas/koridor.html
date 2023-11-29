@@ -1,0 +1,79 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="mt-2 mb-5">
+        {% if not user.premium and kelas.premium %}
+        <div class="shadow rounded-3 d-flex p-4 mb-5 bg-primary bg-opacity-25">
+            <div class="display-4 m-4 align-self-center">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3>Akun anda belum premium</h3>
+                <h5>Langganan sekarang dan dapatkan experience nya</h5>
+                <div>
+                    <a href="{% url 'user:upgrade' %}" class="btn btn-primary rounded-0 px-5">Langganan sekarang</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="d-flex justify-content-between">
+            <div class="h2 fw-bold">Belajar {{kelas.kelas}}</div>
+            {% if enroll.enroll %}
+            <a href="{% url 'user:pelajaran' slug=kelas.slug urutan_bab=history.bab_kelas.urutan urutan_pelajaran=history.pelajaran.urutan  %}" class="text-uppercase btn btn-lg btn-dark rounded-0 fw-semibold">Pelajari</a>
+            {% else %}
+            <form action="{% url 'user:subscribe' slug=kelas.slug %}" method="post">{% csrf_token %} <input {% if not user.premium and kelas.premium %}disabled{%endif%} type="submit" value="Daftar" name="daftar" class="btn btn-lg fw-semibold btn-dark rounded-0 shadow"></form>
+            {% endif %}
+        </div>
+        <div class="bg-white shadow-sm p-3 my-4 rounded-2 card">
+            <div class=" h3 fw-bold">{{pelajaran}} sudah dipelajari</div>
+            <div class="d-flex justify-content-between ">
+                <div class="fw-semibold text-muted h5 align-self-center">{{kelas.bab}} topik, {{kelas.pelajaran}} pelajaran</div>
+                <p class="align-self-center text-muted me-4 mt-3">
+                    <i class="fas fa-eye ms-1 me-1"></i>{{kelas.see}}
+                    <i class="fas fa-user ms-2 me-1"></i>{{kelas.subscribe}}
+                    <i class="fas fa-check ms-2 me-1"></i>{{kelas.finish}}
+                    <i class="fas fa-message ms-2 me-1"></i>{{kelas.feedback}}
+                    <i class="fas fa-star text-warning me-1 ms-3"></i>{% if kelas.ratting == None %}0.0{%else%}{{ kelas.ratting}}{% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fa-solid fa-book text-primary me-3"></i>Riwayat Ujian</div>
+            <div class="p-3">
+                <div class="d-flex h4 fw-bold mb-4"><div class="col-8">Ujian</div><div class="col-4 text-center">Nilai</div></div>
+                <div class="d-flex h5 fw-bold mb-2"><div class="col-8">Pengenalan <br> <span class="h6">01 January 2023</span></div><div class="col-4 text-center align-self-center text-success">80%</div></div>
+                <div class="d-flex h5 fw-bold mb-2"><div class="col-8">Pengenalan 2<br> <span class="h6">03 January 2023</span></div><div class="col-4 text-center align-self-center text-success">60%</div></div>
+                <div class="d-flex h5 fw-bold mb-2"><div class="col-8">Pengenalan 3<br> <span class="h6">06 January 2023</span></div><div class="col-4 text-center align-self-center text-danger">20%</div></div>
+                <div class="d-flex mt-4 h5 fw-bold mb-2"><div class="col-8"></div><div class="col-4 align-self-center  text-center"><a href="#" class="btn btn-secondary fw-bold px-3 rounded-0">Lihat Selengkapnya</a></div></div>
+            </div>
+        </div>
+        
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fa-solid fa-people-group text-info me-3"></i>Forum</div>
+            <div class="p-3">
+                <div class="d-flex h4 fw-bold mb-4"><div class="col-8">Apa kata mereka ?</div><div class="col-4 text-center">Kategori</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">Susah nagengr </div><div class="col-4 text-center align-self-center ">Pengenalan</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">di isi apa yah</div><div class="col-4 text-center align-self-center ">Pengenalan 2</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">gak tau</div><div class="col-4 text-center align-self-center">Pengenalan 3</div></div>
+            </div>
+        </div>
+        
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fas fa-star text-warning me-3"></i> Ratting</div>
+            <div class="p-3">
+                <div class="d-flex h4 fw-bold mb-4"><div class="col-8">Feedback</div><div class="col-4 text-center">Ratting</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">Susah nagengr </div><div class="col-4 text-center align-self-center ">5/5</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">di isi apa yah</div><div class="col-4 text-center align-self-center ">2/5</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">gak tau</div><div class="col-4 text-center align-self-center">3/5</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

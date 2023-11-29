@@ -1,0 +1,130 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+    .grab {
+        cursor: grab;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="container bg-white rounded-3 p-3 shadow-sm">
+          <table class="table">
+            {% for bab in list %}
+            <thead>
+                <tr>
+                    <th scope="col">BAB {{ forloop.counter }}</th>
+                    <th scope="col">{{bab.bab}}</th>
+                  <th scope="col" class="text-end">
+                    <div class="btn-group">
+                      <a href="{% url 'owner:tambah_pelajaran' id=bab.id slug=bab.kelas.slug %}" class="btn btn-sm btn-success"><i class="fas fa-plus"></i></a>
+                      <a href="#" class="btn btn-sm btn-primary"><i class="fas fa-pencil"></i></a>
+                      <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a></th>
+                    </div>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pelajaran in bab.pelajaran %}
+                <tr draggable="true"  ondragstart="dragit(event)"  ondragover="dragover(event)">
+                    <td class="grab">{{pelajaran.urutan}} <i class="fas fa-sort ms-2"></i></td>
+                    <td>{{pelajaran.judul}}</td>
+                    <td class="text-end">
+                      <div class="btn-group">
+                        <a href="{% url 'owner:edit_pelajaran' id=pelajaran.id %}" class="btn btn-sm btn-primary"><i class="fas fa-pencil"></i></a>
+                        <a href="{% url 'owner:hapus_pelajaran' slug=slug id=pelajaran.id  %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                      </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endfor %}
+          </table>
+          <div class="d-flex justify-content-end">
+                <div class="btn btn-light me-3" data-bs-toggle="modal" data-bs-target="#modaltambahbab">Tambah</div>
+                <form action="" method="post">
+                  {% csrf_token %}
+                    <div id="form_table"  class="d-none"> </div>
+                    <input type="submit" value="Update" class="btn btn-primary">
+                </form>
+          </div>
+    </div>
+    <p id="urutan"></p>
+  </div>
+  <div class="modal fade" id="modaltambahbab" tabindex="-1" aria-labelledby="modaltambahbablabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modaltambahbablabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+          <div class="modal-body">
+            {% csrf_token %}
+            {{form_tambah_bab}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modaltambahpelajaran" tabindex="-1" aria-labelledby="modaltambahlabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modaltambahlabel">Tambah kelas</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+          <div class="modal-body">
+            {% csrf_token %}
+            <div class="d-flex flex-column">
+              {{addkelas}}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block script %}
+<script>
+let shadow
+function dragit(event){
+  shadow=event.target;
+}
+function dragover(e){
+    let children=Array.from(e.target.parentNode.parentNode.children);
+    if(children.indexOf(e.target.parentNode)>children.indexOf(shadow)){
+        e.target.parentNode.after(shadow);
+    }
+  else{
+      e.target.parentNode.before(shadow);
+        changecontent();
+  }
+}
+
+function changecontent(){
+    urutan_list = document.createElement("div")
+    urutan = document.getElementsByClassName("grab");
+    urut = document.getElementById("form_table");
+    urut.innerHTML = ""
+    for(var i=0;i<urutan.length;i++){
+        input = document.createElement("input")
+        input.setAttribute("value", urutan[i].nextElementSibling.innerHTML);
+        input.setAttribute("name", "urutan");
+        urutan_list.appendChild(input)
+    }
+    urut.appendChild(urutan_list)
+}
+</script>
+{% endblock script %}

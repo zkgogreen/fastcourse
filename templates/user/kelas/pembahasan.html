@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="icon" type="image/x-icon" href="http://{{request.get_host}}/{{icon}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.css' %}">
+  </head>
+  <body>
+   <div class="w-100 d-flex justify-content-between shadow fixed-top bg-body" style="height: 80px;">
+    <a href="{% url 'user:koridor_soal' slug=latih.kelas.slug urutan_bab=latih.bab_kelas.urutan %}" class="h3 align-self-center col-3 text-center" style="cursor: pointer;"><i class="fas fa-times"></i></a>
+    <div class="align-self-center col-3 h3 fw-bold {% if latih.nilai >= 80 %}text-success{% endif %}">{{ latih.nilai }}/100</div>
+   </div>
+   <div class="container" style="margin-bottom:  100px; margin-top: 120px">
+        {% for s in latih.soal %}
+            <div class="fw-bold h3">{{ forloop.counter }}. {{s.questions.soal}}
+                {% if s.questions.answer == s.selected %}<i class="fas fa-check text-success-emphasis ms-4"></i>
+                {% else %}<i class="fas fa-times text-danger ms-4"></i>{% endif %}
+            </div>
+            <div class="d-grid gap-1">
+            {% for q in s.questions.questionList %}
+                <div class="btn
+                {% if s.questions.answer == q %} btn-success
+                {% elif s.selected == q and s.questions.answer != q %}btn-danger
+                {% else %}btn-outline-secondary{% endif %}
+                rounded-0 fw-semibold h5 text-start">{{q}}</div>
+            {% endfor %}
+            <div class="card w-100 fw-semibold p-3">
+                {{ s.questions.penjelasan }}
+            </div>
+            </div>
+            <br>
+        {% endfor%}
+    </div>
+</body>
+</html>

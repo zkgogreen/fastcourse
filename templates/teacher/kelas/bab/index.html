@@ -1,0 +1,111 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+{% endblock head %}
+{% block css %}
+<style>
+    .my-wrap {
+        overflow: hidden;
+        width: 100%;
+        text-overflow: ellipsis;
+        word-break:break-all;
+        height: 40px;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="d-flex justify-content-between my-3">
+        <div class="display-6">{{kelas.kelas}}</div>
+        <div class="btn btn-primary btn-lg rounded-0 me-3 align-self-center" data-bs-toggle="modal" data-bs-target="#modaltambahbab">Tambah</div>
+    </div>
+    <div class="container d-flex flex-column gap-2 bg-white rounded-3 p-3 shadow-sm">
+        {% for bab in bab %}
+        <div class="d-flex fw-bold">
+            <div style="width: 130px;">BAB {{bab.urutan}}</div>
+            <div class="my-wrap">{{bab.bab}}</div>
+            <div class="col d-flex justify-content-end">
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-sm rounded-0" data-bs-toggle="collapse" href="#collapse{{bab.id}}" role="button" aria-expanded="false" aria-controls="collapse{{bab.id}}">EXPAND</a>
+                    <a href="{% url 'teacher:bab_edit' id=bab.id %}" class="btn btn-outline-primary btn-sm rounded-0">EXPLORE</a>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="collapse{{bab.id}}">
+            <div class="card card-body my-3">
+                {% if bab.pelajaranModel %}
+                {% for pelajaran in bab.pelajaranModel %}
+                <div class="d-flex">
+                    <div style="width: 130px;">{{pelajaran.urutan}}</div>
+                    <div class="my-wrap">{{pelajaran.judul}}</div>
+                </div>
+                {% endfor %}  
+                {% else %}
+                <div class="h5 text-center">
+                    Klik EXPLORE untuk menambahkan
+                </div>  
+                {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="modal fade" id="modaltambahbab" tabindex="-1" aria-labelledby="modaltambahbablabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modaltambahbablabel">Tambah BAB</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+            <div class="modal-body">
+            {% csrf_token %}
+            <input type="hidden" name="bab_id" id="bab_id" value="">
+            {{form_bab.as_p}}
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Tambah</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<!-- modal hapus bab  -->
+<div class="modal fade" id="modalhapusbab" tabindex="-1" aria-labelledby="modalhapusbablabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalhapusbablabel">Hapus Bab</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex flex-column text-center">
+            <div class="display-5 text-danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Yakin ingin menghapus <span id="modalJudul"></span></h3>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="#" class="btn btn-danger" id="modalId">Hapus</a>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- end modal hapus bab -->
+{% endblock content %}
+{% block script %}
+<script>
+const modal_title   = document.getElementById("modalJudul");
+const modal_id      = document.getElementById("modalId");
+
+function modalHapus(title, href){
+    modal_title.innerHTML = title
+    modal_id.href = href
+}
+function modalEdit(id){
+    $('#modaltambahbab').modal('show');
+    document.getElementById("bab_id").value = id;
+}
+</script>
+{% endblock script %}

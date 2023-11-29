@@ -1,0 +1,80 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="container bg-white shadow-sm rounded p-3">
+        <div class="d-flex justify-content-between">
+            <div class="display-6">Kelas</div>
+            <div class="btn btn-lg align-self-center" data-bs-toggle="modal" data-bs-target="#modaltambah"><i class="fas fa-plus me-2"></i> Tambah kelas</div>
+        </div>
+        <div class="row">
+            {% for kls in kelas %}
+            <div class="col-md-2">
+                <div class="card shadow mt-3">
+                    <img src="/media/{{kls.photo}}" style="height: 150px; object-fit: cover;" alt="{{kls.photo}}">
+                    <div class="card-body text-center">
+                      <h5 class="card-title h6">{{kls.kelas}}</h5>
+                      <p class="card-text" >
+                        <p class="text-muted me-4" style="font-size: 12px;">
+                            <i class="fas fa-eye ms-1 me-1"></i>{{kls.see}}
+                            <i class="fas fa-user ms-2 me-1"></i>{{kls.subscribe}}
+                            <i class="fas fa-check ms-2 me-1"></i>{{kls.finish}}
+                            <i class="fas fa-message ms-2 me-1"></i>{{kls.feedback}}
+                        </p>
+                        <p class="h6 text-muted me-4" style="font-size: small;">
+                        <i class="fas fa-star text-warning me-1"></i>{% if kls.ratting == None %}0.0{%else%}{{ kls.ratting}}{% endif %}
+                        <i class="fas fa-book me-1 ms-2 text-primary"></i>{{kls.pelajaran}}
+                        <span class="ms-2">{{kls.kategori.name}}</span></p>
+                      </p>
+                      <div class="btn-group" style="font-size: small;">       
+                        <a href="{% url 'owner:kelasrilis' slug=kls.slug %}"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Rilis" class="btn btn-sm {% if kls.rilis == True %}btn-primary{%else%}btn-danger{%endif%} "><i class="fa-regular fa-share-from-square"></i></a>
+                        <a href="{% url 'owner:kelasdetail' slug=kls.slug %}"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="edit" class="btn btn-sm btn-primary"><i class="fas fa-pencil"></i></a>
+                          <a href="{% url 'owner:kelashapus' slug=kls.slug %}"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="hapus" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                      </div>
+                      <div class="btn-group mt-2"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Urutkan">
+                        <a href="{% url 'owner:next_kelas' slug=kls.slug input='prev' %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-angle-left"></i></a>
+                        <div class="btn btn-light btn-sm">{{kls.urutan}}</div>
+                        <a href="{% url 'owner:next_kelas' slug=kls.slug input='next' %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-angle-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- modal tambah -->
+<div class="modal fade" id="modaltambah" tabindex="-1" aria-labelledby="modaltambahlabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modaltambahlabel">Tambah kelas</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            {% csrf_token %}
+            <div class="d-flex flex-column">
+              {{addkelas}}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+{% endblock content %}
+{% block script %}
+<script>
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+{% endblock script %}

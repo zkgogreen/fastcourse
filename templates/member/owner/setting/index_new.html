@@ -1,0 +1,119 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+    .img-thumbnail{
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content px-md-5">
+    <form action="" enctype="multipart/form-data" method="post">
+    <div class="p-3 bg-white rounded-3 shadow-sm">
+        <div class="h3 fw-bold my-2">Landing page</div>
+        {% csrf_token %}
+        {{landing_form.title.label}}
+        {{landing_form.title}}
+        {{landing_form.sub.label}}
+        {{landing_form.sub}}
+        <div class="row">
+            <div class="col-3 text-center">{{landing_form.icon.label_tag}}{{landing_form.icon}} <p class="fw-semibold">Icon</p> </div>
+            <div class="col-3 text-center">{{landing_form.logo.label_tag}}{{landing_form.logo}} <p class="fw-semibold">Logo</p> </div>
+            <div class="col-3 text-center">{{landing_form.foto.label_tag}}{{landing_form.foto}} <p class="fw-semibold">Photo</p> </div>
+            <div class="col-3 text-center">{{landing_form.fotoadv.label_tag}}{{landing_form.fotoadv}} <p class="fw-semibold">More Photo</p> </div>
+        </div>
+        {% if landing_form.errors %}
+            <ul class="text-danger">
+            {% for field_errors in landing_form.errors.values %}
+                {% for error in field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div class="p-3 mt-4 bg-white rounded-3 shadow-sm">
+        <div class="h3 fw-bold my-2">Info</div>
+        <div class="row">
+            <div class="col-md-6">
+                {{landing_form.alamat.label_tag}}{{ landing_form.alamat }}
+                {{landing_form.telp.label_tag}}{{ landing_form.telp }}
+                {{landing_form.email.label_tag}}{{ landing_form.email }}
+            </div>
+            <div class="col-md-6">
+                <p class="my-1">Sosial Media</p>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-instagram"></i></span>
+                    {{ landing_form.ig }}
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-facebook-f"></i></span>
+                    {{ landing_form.fb }}
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-tiktok"></i></span>
+                    {{ landing_form.tiktok }}
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa-brands fa-youtube"></i></span>
+                    {{ landing_form.youtube }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-3 mt-4 bg-white rounded-3 shadow-sm">
+        <div class="h3 fw-bold my-2">Komisi</div>
+        <div class="row">
+            <div class="col-md-6">
+                {{landing_form.komisi_teacher.label_tag}}
+                <div class="input-group mb-3">
+                    {{ landing_form.komisi_teacher }}
+                    <span class="input-group-text">%</span>
+                </div>
+                {{landing_form.komisi_developer.label_tag}}
+                <div class="input-group mb-3">
+                    {{ landing_form.komisi_developer }}
+                    <span class="input-group-text">%</span>
+                </div>
+                {{landing_form.komisi_owner.label_tag}}
+                <div class="input-group mb-3">
+                    {{ landing_form.komisi_owner }}
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center my-4 h2 fw-bold" id="percent"></div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary mt-3">simpan</button>
+    </div>
+    </form>
+</div>
+
+{% endblock content %}
+{% block script %}
+<script>
+var komisi_teacher = document.getElementById("id_komisi_teacher")
+var komisi_developer = document.getElementById("id_komisi_developer")
+var komisi_owner = document.getElementById("id_komisi_owner")
+const percent = document.getElementById("percent")
+function getpercent(){
+    percent_value = parseInt(komisi_teacher.value) + parseInt(komisi_developer.value) + parseInt(komisi_owner.value)
+    if(percent_value == 100){
+        percent.style.color = "green"
+    }else{
+        percent.style.color = "red" 
+    }
+    percent.innerHTML = percent_value+"%"
+}
+getpercent()
+</script>
+{% endblock script %}

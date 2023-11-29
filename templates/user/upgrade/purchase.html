@@ -1,0 +1,39 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content bg-primary bg-opacity-75 rounded-3">
+    <div class="mt-4 container text-white">
+        <div class="display-6 fw-semibold text-center my-2 pb-3">BERGABUNG SEKARANG</div>
+        <h4 class="fw-light text-center">"Raih Kehebatan dengan Langganan Premium Kami!"</h4>
+        <p class="text-center">Dapatkan akses tak terbatas ke seluruh materi pembelajaran. <br>Semakin lama Anda bergabung, semakin banyak keuntungan yang Anda dapatkan.</p>
+        <div class="row mt-5">
+            {% for l in langganan %}
+            <div class="col-md-4 col-12 mb-4">
+                <div class="card mx-3 text-dark p-3">
+                    <div class="h3 text-center">{{l.durasi}} bulan</div>
+                    <h5 class="text-danger" style="text-decoration: line-through red;">Rp. {{l.harga|cut:"000"|intcomma}}K</h5>
+                    <h5>Rp.{{l.diskon|cut:"000"|intcomma}}K</h5>
+                    <div class="d-flex flex-column mt-3 px-2">
+                        <span><i class="fas fa-check text-primary me-2"></i>Akses ke semua materi</span>
+                        <span><i class="fas fa-check text-primary me-2"></i>Gratis Webinar</span>
+                        <span><i class="fas fa-check text-primary me-2"></i>Masuk Komunitas</span>
+                        <span><i class="fas fa-check text-primary me-2"></i>diskusi dengan tutor terbaik kami</span>
+                        <span><i class="fas fa-check text-primary me-2"></i>Evaluasi bulanan</span>
+                    </div>
+                    <div class="d-grid mt-5">
+                        <a href="#" class="btn btn-primary btn-sm">Langganan Sekarang</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

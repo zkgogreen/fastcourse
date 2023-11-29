@@ -1,0 +1,93 @@
+{% extends 'member/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content">
+  <div class="row">
+      <div class="col-md-12 col-lg-6">
+        <div class="p-1 mt-2 bg-white shadow-sm px-4 py-3 card" style="max-height: 120px;">
+          <div class="row justify-content-start">
+            <div class="col-md-6 align-self-center">
+              <div class="d-flex justify-content-between">
+                <div class='h5'>{{user.level.name}}</div>
+                <div class="h4 text-primary">{{user.xp}} XP</div>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" style="width: 50%;"></div>
+              </div>
+            </div>
+            <div class="col-md-6 align-self-center">
+              <div class="d-flex pt-3 justify-content-sm-start justify-content-lg-end justify-content-md-end">
+                <span class='h3 me-2'><i class="fas fa-crown text-primary me-2"></i>{{user.mahkota}}</span>
+                <span class='h3 me-2'><i class="fas fa-star text-warning me-2"></i>{{user.game}}</span>
+                <span class='h3 me-2'><i class="fas fa-heart text-danger me-2"></i>{{user.nyawa}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div class="p-1 mt-2 card bg-white shadow-sm px-4 py-3" style="max-height: 120px;">
+          <div class="row justify-content-between">
+            <div class="col-md-9">
+              <div class="d-flex flex-row ps-3 loop" >
+                  <div class="circular-portrait btn-hover" style="margin-left: -15px; border:solid 5px #fff;">
+                    <img src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745" alt="profile" />
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-3 align-self-center">
+              <a href="{% url 'user:bootcamp' %}" class="btn fw-bold">Mentor</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-5 mt-4">
+        <div class="card rounded-0">
+          <div class="card-header bg-white">
+            <a href="{% url 'user:kelas' %}" class="h4 fw-lighter text-primary text-decoration-none ms-2">Kelas</a>
+          </div>
+          <div class="card-body">
+            {% for kls in kelas %}
+            <a href='{% url "user:pelajaran" slug=kls.slug urutan=kls.history.pelajaran.urutan %}' class="d-flex text-decoration-none bg-light text-muted rounded-0 fw-lighter">
+              <img src="/media/{{kls.photo}}" alt="profile" style="height: 70px; object-fit: cover;" />
+              <div class="d-flex flex-column mx-3 align-self-center" style="width:100%">
+                <div class=" h6">{{kls.level}}</div>
+                <div class="h4 text-primary">{{kls.name}}</div>
+              </div>
+              <span class="h5 fw-lighter text-muted align-self-center mx-2">{% if kls.finish %} <div class="btn btn-secondary btn-sm rounded-0"></div>{% else %} {{kls.lessondone}}/{{kls.lesson}}{% endif %}</span>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-4 mt-4">
+        <div class="bg-white card">
+          <div class="card-header bg-white">
+            <a href="{% url 'user:kelas' %}" class="h4 fw-lighter text-primary text-decoration-none ms-2">Jadwal</a>
+          </div>
+          {% for j in jadwal %}
+          <a href="#" class="rounded-0 btn d-flex text-dark {% if forloop.counter == 1 %} bg-light {% else %} bg-white {% endif %}" style="height: 55px;">
+            <div class="shadow align-self-center me-2"><img src="http://{{ request.get_host }}/media/{{j.mentor.photo}}" alt="english" style="height: 30px;"></div>
+            <div class="d-flex justify-content-between" style="width: 100%;">
+              <div class="d-flex flex-column align-self-center mt-3">
+                <p class="fw-bold" style="margin-bottom: -3px;">{% if j.room.bab %}{{j.room.bab}}{% else %}Private{% endif %}</p>
+                <p class="text-muted text-start fw-lighter">{{j.room.time|date:'h:iA'}}</p>
+              </div>
+              <div class="d-flex flex-column lh-1 align-self-center me-2 fw-bold">
+                <p style="margin-bottom: -1px;" class="fw-bold">{{j.room.get_day_display}}</p>
+                <p class="text-info fw-lighter">{{j.tgl|date:'d/m'}}</p>
+              </div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

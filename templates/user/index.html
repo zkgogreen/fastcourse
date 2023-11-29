@@ -1,0 +1,188 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content">
+  <div class="row">
+      <div class="col-md-12 col-lg-6"  style="height: 100px;">
+        <div class="d-flex flex-column flex-md-row h-100 bg-white shadow-sm px-4 rounded-3">
+          <div class="col-6 align-self-center">
+            <div class="d-flex justify-content-between">
+              <h5 class="fw-bold text-uppercase">
+                {% if user.premium %}Premium
+                {% else %} <a href="{% url 'user:upgrade' %}" class="text-decoration-none">FREE <i class="ms-3 fa-solid fa-arrow-up-right-from-square"></i></a>{% endif %}
+              </h5>
+              <h4 class="fw-bold text-primary">{{user.xp}} XP</h4>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: 50%;"></div>
+            </div>
+          </div>
+          <div class="col-6 align-self-center">
+            <div class="d-flex pt-3 justify-content-sm-start justify-content-lg-end justify-content-md-end">
+              <span class='h3 me-2'><i class="fas fa-crown text-primary me-2"></i>{{user.mahkota}}</span>
+              <span class='h3 me-2'><i class="fas fa-star text-warning me-2"></i>{{user.game}}</span>
+              <span class='h3 me-2'><i class="fas fa-heart text-danger me-2"></i>{{user.nyawa}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-6" style="height: 100px;">
+        <div class="bg-white shadow-sm px-4 h-100 rounded-3" >
+          {% if mentor %}
+          <div class="d-flex justify-content-between" style="height: 100%;">
+            <div class="d-flex">
+              <div class="circular-portrait align-self-center " style="margin-left: -15px; border:solid 5px #fff;">
+                <img src="/media/{{mentor.mentorprofile.photo}}" alt="profile" />
+              </div>
+              <div class="ms-3 lh-1 align-self-center">
+                <span class="text-muted text-uppercase h4">{{mentor.mentor.first_name}} {{mentor.mentor.last_name}}</span><br>
+                <div class="text-secondary fw-semibold ms-1">{{mentor.start|date:"d M Y"}} - {{mentor.end|date:"d M Y"}} </div>
+              </div>
+            </div>
+            <div class="align-self-center">
+              <h3>{{mentor.meetremains}}/{{mentor.room.level.meeting}}</h3>
+            </div>
+          {% else %}
+            <div class="d-flex justify-content-between h-100">
+              <div class="align-self-center">
+                <div class="d-flex flex-row ps-3" >
+                  <div class="circular-portrait btn-hover" style="margin-left: -15px; border:solid 5px #fff;">
+                    <img src="https://media.istockphoto.com/id/1154642632/photo/close-up-portrait-of-brunette-woman.jpg?b=1&s=612x612&w=0&k=20&c=7hgSq1L2mpIbpuuw00KELApMpmZfBkZ-RBxn3Qps5zQ=" alt="profile" />
+                  </div>
+                  <div class="circular-portrait btn-hover" style="margin-left: -15px; border:solid 5px #fff;">
+                    <img src="https://media.licdn.com/dms/image/D4E03AQHmKuyBJrF9-A/profile-displayphoto-shrink_800_800/0/1678265283374?e=2147483647&v=beta&t=WDLP6OCVWEa57N9zLVPfE9lk1fWHfTg1Njgwx4gk0Ng" alt="profile" />
+                  </div>
+                  {% for m in allmentor %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="align-self-center">
+                <a href="{% url 'user:purchase_bootcamp' %}" class="btn btn-lg rounded-0 btn-primary fw-bold">Cari Mentor</a>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- kelas -->
+      <div class="container row" style="margin-top: 30px;">
+        <div class="col-md-6 col-12">
+          <div class="card sahdow-sm px-4">
+            <h3 class="fw-bold my-3 ms-3">Pembelajaran</h3>
+            {% for k in kelas %}
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-between bg-light rounded-3 m-2 p-3">
+                <div class="align-self-center w-100 me-3"><h5 class="fw-bold">Belajar {{k.kelas}}</h5>
+                  <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 5px">
+                    <div class="progress-bar" style="width: {{k.percent}}%"></div>
+                  </div>
+                </div>
+                <a href="{% url 'user:koridor' slug=k.kelas.slug %}" class="btn text-primary fw-bold align-self-center">LANJUTKAN</a>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'user:kelas' %}" class="btn btn-primary rounded-0 m-2 fw-bold">Lihat Semua Kelas</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-12">
+          <div class="card shadow-sm px-4">
+            <h3 class="fw-bold my-3 ms-3">Bootcamp</h3>
+            <!-- hari ini -->
+            {% if today %}
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-between bg-light rounded-3 p-2">
+                <div class="align-self-center w-100 me-3"><h5 class="fw-semibold">Hari ini</h5>
+                  {{today.tanggal|date:"d M Y"}} | <span id="gettime">{{today.schadule.get_time_display}}</span> WIB
+                </div>
+                {% if today.now %}
+                <a href="{{today.schadule.link}}" target="_blank" class="btn text-primary fw-bold align-self-center disabled" id="time">waiting</a>
+                {% else %}
+                <div></div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            <!-- end hari ini -->
+            
+            <!-- besok -->
+            {% if coming %}
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-between bg-light rounded-3 p-2">
+                <div class="align-self-center w-100 me-3"><h5 class="fw-semibold">Mendatang</h5>
+                  {{coming.tanggal|date:"d M Y"}} | {{coming.room.get_time_display}} WIB
+                </div>
+                <a href="{% url 'user:bootcamp' %}" class="btn text-primary fw-bold align-self-center text-end">Selengkapnya</a>
+              </div>
+            </div>
+            {% endif %}
+            <!-- end besok -->
+            
+            <!-- terlewatkan -->
+            {% if pass %}
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-between bg-light rounded-3 p-2">
+                <div class="align-self-center w-100 me-3"><h5 class="fw-semibold text-danger">Terlewatkan</h5>
+                  {{pass.tanggal|date:"d M Y"}} | {{pass.room.get_time_display}} WIB
+                </div>
+                <a href="{% url 'user:bootcamp' %}" class="btn text-primary fw-bold align-self-center text-end">reschadule</a>
+              </div>
+            </div>
+            {% endif %}
+            <!-- end terlewatkan -->
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'user:bootcamp' %}" class="btn btn-primary rounded-0 m-2 fw-bold">Selengkapnya</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+{% block script %}
+<script>
+function perbarui(id){
+  getid = document.getElementsByClassName("id_userroom");
+  for(var i=0; i<getid.length;i++){
+    getid[i].value = id;
+  }
+}
+</script>
+{% if today %}
+<script>
+var time              = document.getElementById("time");
+var countdownElement  = document.getElementById("gettime");
+function updateCountdown() {
+    var now = new Date();
+
+    var initialTime = countdownElement.innerText.split(":");
+    var targetHours = parseInt(initialTime[0]);
+    var targetMinutes = parseInt(initialTime[1]);
+    var targetTime = new Date();
+    targetTime.setHours(targetHours, targetMinutes-3, 0, 0);
+
+    var timeDiff = targetTime - now;
+
+    if (timeDiff <= 0) {
+        time.innerHTML = 'Buka Zoom';
+        time.classList.remove("disabled")
+    } else {
+        var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+        time.innerHTML = hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
+}
+setInterval(updateCountdown, 1000);
+</script>
+{% endif %}
+{% endblock script %}

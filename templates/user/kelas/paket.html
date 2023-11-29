@@ -1,0 +1,76 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}
+<style>
+.images{
+    position: relative;
+}
+.images > img {
+    width: 80%;
+}
+.bottom-left {
+  position: absolute;
+  bottom: 10%;
+  left:15%;
+}
+.text {
+  white-space: nowrap; 
+  width: 100%; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <p class="display-5 my-4">Proses Belajar</p>
+    <div class="ms-1 row text-center">
+        <a href="{% url 'user:kelas' %}" class="col-3 btn text-decoration-none fw-bold btn-outline-primary rounded-0 py-2">Kelas</a>
+        <a href="{% url 'user:paket' %}" class="col-3 btn text-decoration-none fw-bold btn-primary rounded-0 py-2 ">Paket Belajar</a>
+    </div>
+    <div class="mt-4">
+        <div class="bg-white shadow px-3 py-4 rounded-3">
+            <p class="h3 mb-3 ms-1 fw-semibold">Kelas yang dipelajari</p>
+        {% for k in kelas %}
+            <div class="kelas d-flex justify-content-between p-2 bg-light">
+                <div class="d-flex align-self-center fw-bold h4" style="min-width: 150px;">
+                    <span class="col-1 text-secondary mx-4 align-self-center"><i class="fa-regular fa-circle"></i></span>
+                    <div class="align-self-center mt-2">
+                        <a href="{% url 'user:koridor' id=k.id %}" class="d-md-none d-block  text-decoration-none text-muted">{{k.kelas}}</a>
+                        <span class="d-none d-md-block">{{k.kelas}}</span>
+                        <p class="h6 text-muted">
+                            <i class="fas fa-star text-warning me-1"></i>{% if k.ratting == None %}0.0{%else%}{{ k.ratting}}{% endif %}
+                            <i class="fas fa-book me-1 ms-2 text-primary"></i>{{k.pelajaran}}
+                            <i class="fas fa-check ms-2 me-1"></i>{{k.finish}}
+                        </p>
+                    </div>
+                </div>
+                <div class=" align-self-center me-3 link d-none">
+                    <a href="{% url 'user:koridor' id=k.id %}" class="fw-bold btn btn-dark rounded-0">PELAJARI</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+    const kelas = document.getElementsByClassName("kelas");
+    const link  = document.getElementsByClassName("link")
+    const info  = document.getElementsByClassName("info")
+
+    for(let i=0;i<kelas.length;i++){
+        kelas[i].addEventListener("mouseenter", function(){
+            link[i].classList.toggle("d-none")
+            info[i].classList.toggle("d-none")
+        })
+        kelas[i].addEventListener("mouseleave", function(){
+            link[i].classList.toggle("d-none")
+            info[i].classList.toggle("d-none")
+        })
+    }
+</script>
+{% endblock script %}
